@@ -7,15 +7,20 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  * Função para executar durante a desinstalação do plugin
  */
 function plugin_desinstalar() {
-    // Remover opções de configuração do plugin
+    global $wpdb;
+
+    // Prefixo da tabela
+    $prefixo = $wpdb->prefix;
+
+    // Nome da tabela
+    $tabela = $prefixo . 'pagarme_configuracao';
+
+    // Remove a tabela
+    $wpdb->query( "DROP TABLE IF EXISTS $tabela" );
+
+    // Remove as opções
     delete_option('pagarme_api_key');
     delete_option('pagarme_token');
-
-    // Outros procedimentos de desinstalação, como a remoção de tabelas de banco de dados, se necessário
-    // Exemplo:
-    // global $wpdb;
-    // $table_name = $wpdb->prefix . 'example_table';
-    // $sql = "DROP TABLE IF EXISTS $table_name;";
-    // $wpdb->query($sql);
 }
+
 plugin_desinstalar();
