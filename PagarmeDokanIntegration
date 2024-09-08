@@ -13,6 +13,8 @@ require_once(plugin_dir_path(__FILE__) . 'produtos_restricao.php');
 require_once(plugin_dir_path(__FILE__) . 'email_rotinas.php');
 require_once(plugin_dir_path(__FILE__) . 'split_payment.php');
 require_once(plugin_dir_path(__FILE__) . 'verificacao_admin.php');
+require_once plugin_dir_path(__FILE__) . 'includes/configuracoes-plugin.php';
+
 
 // Adiciona hooks e filtros
 add_action('init', 'wizard_corrigir_dados_bancarios', -1);
