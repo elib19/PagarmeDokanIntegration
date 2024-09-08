@@ -1,3 +1,4 @@
+<?php
 /**
  * Adiciona a página de configurações do plugin ao menu do WordPress
  */
