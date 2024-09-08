@@ -5,38 +5,112 @@
  * Version: 1.0
  * Author: Eli Silva
  * Author URI: brasilnarede.online
+ * License: GPL2
  */
 
-// Inclui os arquivos necessários
-require_once plugin_dir_path(__FILE__) . 'includes/configuracoes-plugin.php';
-require_once plugin_dir_path(__FILE__) . 'includes/criar_conta_bancaria.php';
-require_once plugin_dir_path(__FILE__) . 'includes/email_rotinas.php';
-require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
-require_once plugin_dir_path(__FILE__) . 'includes/produtos_restricao.php';
-require_once plugin_dir_path(__FILE__) . 'includes/split_payment.php';
-require_once plugin_dir_path(__FILE__) . 'includes/verificacao_admin.php';
-require_once plugin_dir_path(__FILE__) . 'includes/wizard_configuracao.php';
+// Impede acesso direto ao arquivo
+if ( ! defined( 'WPINC' ) ) {
+    die;
+}
 
+// Define o diretório do plugin
+define( 'PDI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
-
-// Adiciona hooks e filtros
-add_action('init', 'wizard_corrigir_dados_bancarios', -1);
-add_action('dokan_seller_wizard_store_field_save', 'salvar_endereco');
-add_action('dokan_seller_wizard_payment_field_save', 'salvar_dados_bancarios');
-add_action('woocommerce_order_status_processing', 'wc_pagarme_slip_rules');
-add_action('admin_notices', 'verifica_dados_pagarme_usuario_pagarmedokan');
+// Inclui arquivos necessários
+include( PDI_PLUGIN_DIR . 'includes/functions.php');
+include( PDI_PLUGIN_DIR . 'includes/configuracoes-plugin.php');
+include( PDI_PLUGIN_DIR . 'includes/criar_conta_bancaria.php');
+include( PDI_PLUGIN_DIR . 'includes/email_rotinas.php');
+include( PDI_PLUGIN_DIR . 'includes/produtos_restricao.php');
+include( PDI_PLUGIN_DIR . 'includes/split_payment.php');
+include( PDI_PLUGIN_DIR . 'includes/verificacao_admin.php');
+include( PDI_PLUGIN_DIR . 'includes/wizard_configuracao.php');
 
 // Função para ativar o plugin
-function plugin_ativar()
-{
-    // Aqui você pode adicionar configurações de ativação do plugin, se necessário
+function pagarme_dokan_ativar() {
+    include( PDI_PLUGIN_DIR . 'install.php' );
 }
-register_activation_hook(__FILE__, 'plugin_ativar');
+register_activation_hook( __FILE__, 'pagarme_dokan_ativar' );
 
 // Função para desativar o plugin
-function plugin_desativar()
-{
-    // Aqui você pode adicionar configurações de desativação do plugin, se necessário
+function pagarme_dokan_desativar() {
+    include( PDI_PLUGIN_DIR . 'uninstall.php' );
 }
-register_deactivation_hook(__FILE__, 'plugin_desativar');
-?>
+register_deactivation_hook( __FILE__, 'pagarme_dokan_desativar' );
+
+// Adiciona a página de configurações do plugin ao menu do WordPress
+function pagarme_dokan_adicionar_menu() {
+    add_options_page(
+        'Configurações do Pagarme Dokan Integration',
+        'Configurações do Pagarme Dokan',
+        'manage_options',
+        'pagarme-dokan-settings',
+        'pagarme_dokan_pagina_configuracoes'
+    );
+}
+add_action('admin_menu', 'pagarme_dokan_adicionar_menu');
+
+// Exibe o formulário de configurações do plugin
+function pagarme_dokan_pagina_configuracoes() {
+    ?>
+    <div class="wrap">
+        <h1>Configurações do Pagarme Dokan Integration</h1>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('pagarme_dokan_opcoes');
+            do_settings_sections('pagarme-dokan-settings');
+            submit_button();
+            ?>
+        </form>
+    </div>
+    <?php
+}
+
+// Registra as configurações do plugin
+function pagarme_dokan_registrar_configuracoes() {
+    register_setting('pagarme_dokan_opcoes', 'pagarme_api_key');
+    register_setting('pagarme_dokan_opcoes', 'pagarme_token');
+
+    add_settings_section(
+        'pagarme_dokan_secao_configuracao',
+        'Configurações da API Pagar.me',
+        null,
+        'pagarme-dokan-settings'
+    );
+
+    add_settings_field(
+        'pagarme_api_key',
+        'Chave API',
+        'pagarme_dokan_campo_api_key',
+        'pagarme-dokan-settings',
+        'pagarme_dokan_secao_configuracao'
+    );
+
+    add_settings_field(
+        'pagarme_token',
+        'Token',
+        'pagarme_dokan_campo_token',
+        'pagarme-dokan-settings',
+        'pagarme_dokan_secao_configuracao'
+    );
+}
+add_action('admin_init', 'pagarme_dokan_registrar_configuracoes');
+
+// Exibe o campo para a chave API
+function pagarme_dokan_campo_api_key() {
+    $api_key = get_option('pagarme_api_key');
+    echo '<input type="text" name="pagarme_api_key" value="' . esc_attr($api_key) . '" />';
+}
+
+// Exibe o campo para o token
+function pagarme_dokan_campo_token() {
+    $token = get_option('pagarme_token');
+    echo '<input type="text" name="pagarme_token" value="' . esc_attr($token) . '" />';
+}
+
+// Função para recuperar a chave API e o token
+function pagarme_dokan_recuperar_configuracoes() {
+    $api_key = get_option('pagarme_api_key');
+    $token = get_option('pagarme_token');
+    return array('api_key' => $api_key, 'token' => $token);
+}
