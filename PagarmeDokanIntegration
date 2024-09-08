@@ -7,14 +7,16 @@
  * Author URI: brasilnarede.online
  */
 
-// Inclui arquivos necessários
-require_once(plugin_dir_path(__FILE__) . 'criar_conta_bancaria.php');
-require_once(plugin_dir_path(__FILE__) . 'wizard_configuracao.php');
-require_once(plugin_dir_path(__FILE__) . 'produtos_restricao.php');
-require_once(plugin_dir_path(__FILE__) . 'email_rotinas.php');
-require_once(plugin_dir_path(__FILE__) . 'split_payment.php');
-require_once(plugin_dir_path(__FILE__) . 'verificacao_admin.php');
+// Inclui os arquivos necessários
 require_once plugin_dir_path(__FILE__) . 'includes/configuracoes-plugin.php';
+require_once plugin_dir_path(__FILE__) . 'includes/criar_conta_bancaria.php';
+require_once plugin_dir_path(__FILE__) . 'includes/email_rotinas.php';
+require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
+require_once plugin_dir_path(__FILE__) . 'includes/produtos_restricao.php';
+require_once plugin_dir_path(__FILE__) . 'includes/split_payment.php';
+require_once plugin_dir_path(__FILE__) . 'includes/verificacao_admin.php';
+require_once plugin_dir_path(__FILE__) . 'includes/wizard_configuracao.php';
+
 
 
 // Adiciona hooks e filtros
