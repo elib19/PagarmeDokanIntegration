@@ -1,26 +1,21 @@
 <?php
-/**
- * Funções para desinstalação do plugin
- */
-
-// Função de desinstalação do plugin
-function plugin_desinstalacao() {
-    global $wpdb;
-
-    // Nome das tabelas
-    $tabela_sellers = $wpdb->prefix . 'sellers';
-    $tabela_produtos = $wpdb->prefix . 'produtos';
-
-    // Remove as tabelas
-    $wpdb->query("DROP TABLE IF EXISTS $tabela_sellers");
-    $wpdb->query("DROP TABLE IF EXISTS $tabela_produtos");
-
-    // Remove as opções
-    delete_option('pagarme_api_key');
-    delete_option('pagarme_token');
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+    die;
 }
 
-// Registra a função de desinstalação
-register_uninstall_hook(__FILE__, 'plugin_desinstalacao');
+/**
+ * Função para executar durante a desinstalação do plugin
+ */
+function plugin_desinstalar() {
+    // Remover opções de configuração do plugin
+    delete_option('pagarme_api_key');
+    delete_option('pagarme_token');
 
-?>
+    // Outros procedimentos de desinstalação, como a remoção de tabelas de banco de dados, se necessário
+    // Exemplo:
+    // global $wpdb;
+    // $table_name = $wpdb->prefix . 'example_table';
+    // $sql = "DROP TABLE IF EXISTS $table_name;";
+    // $wpdb->query($sql);
+}
+plugin_desinstalar();
