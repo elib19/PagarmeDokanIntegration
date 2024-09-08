@@ -35,6 +35,10 @@ function plugin_ativacao() {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql_sellers);
     dbDelta($sql_produtos);
+
+    // Adiciona opções padrão para a chave API e o token
+    add_option('pagarme_api_key', '');
+    add_option('pagarme_token', '');
 }
 
 // Registra a função de ativação
