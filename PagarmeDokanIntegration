@@ -1,0 +1,37 @@
+<?php
+/**
+ * Plugin Name: Pagar.me Integration
+ * Description: Integra o Pagar.me com WooCommerce e Dokan para gestão de pagamentos e dados bancários dos vendedores.
+ * Version: 1.0
+ * Author: Seu Nome
+ */
+
+// Inclui arquivos necessários
+require_once(plugin_dir_path(__FILE__) . 'criar_conta_bancaria.php');
+require_once(plugin_dir_path(__FILE__) . 'wizard_configuracao.php');
+require_once(plugin_dir_path(__FILE__) . 'produtos_restricao.php');
+require_once(plugin_dir_path(__FILE__) . 'email_rotinas.php');
+require_once(plugin_dir_path(__FILE__) . 'split_payment.php');
+require_once(plugin_dir_path(__FILE__) . 'verificacao_admin.php');
+
+// Adiciona hooks e filtros
+add_action('init', 'wizard_corrigir_dados_bancarios', -1);
+add_action('dokan_seller_wizard_store_field_save', 'salvar_endereco');
+add_action('dokan_seller_wizard_payment_field_save', 'salvar_dados_bancarios');
+add_action('woocommerce_order_status_processing', 'wc_pagarme_slip_rules');
+add_action('admin_notices', 'verifica_dados_pagarme_usuario_pagarmedokan');
+
+// Função para ativar o plugin
+function plugin_ativar()
+{
+    // Aqui você pode adicionar configurações de ativação do plugin, se necessário
+}
+register_activation_hook(__FILE__, 'plugin_ativar');
+
+// Função para desativar o plugin
+function plugin_desativar()
+{
+    // Aqui você pode adicionar configurações de desativação do plugin, se necessário
+}
+register_deactivation_hook(__FILE__, 'plugin_desativar');
+?>
