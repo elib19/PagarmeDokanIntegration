@@ -4,6 +4,7 @@
  * Description: Integra o Pagar.me com WooCommerce e Dokan para gestão de pagamentos e dados bancários dos vendedores.
  * Version: 1.0
  * Author: Eli Silva
+ * Author URI: brasilnarede.online
  */
 
 // Inclui arquivos necessários
